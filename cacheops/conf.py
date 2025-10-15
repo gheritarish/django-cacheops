@@ -17,7 +17,7 @@ class Defaults:
     CACHEOPS_PREFIX = lambda query: ''
     CACHEOPS_INSIDEOUT = False
     CACHEOPS_CLIENT_CLASS = None
-    CACHEOPS_DEGRADE_ON_FAILURE = False
+    CACHEOPS_DEGRADE_ON_FAILURE = True
     CACHEOPS_SENTINEL = {}
     # NOTE: we don't use this fields in invalidator conditions since their values could be very long
     #       and one should not filter by their equality anyway.
