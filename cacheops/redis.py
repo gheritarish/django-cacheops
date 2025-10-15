@@ -9,17 +9,17 @@ from redis.sentinel import Sentinel
 from .conf import settings
 
 
-if settings.CACHEOPS_DEGRADE_ON_FAILURE:
-    @decorator
-    def handle_connection_failure(call):
-        try:
-            return call()
-        except redis.ConnectionError as e:
-            warnings.warn("The cacheops cache is unreachable! Error: %s" % e, RuntimeWarning)
-        except redis.TimeoutError as e:
-            warnings.warn("The cacheops cache timed out! Error: %s" % e, RuntimeWarning)
-else:
-    handle_connection_failure = identity
+@decorator
+def _handle_connection_failure(call):
+    try:
+        return call()
+    except redis.ConnectionError as e:
+        warnings.warn("The cacheops cache is unreachable! Error: %s" % e, RuntimeWarning)
+    except redis.TimeoutError as e:
+        warnings.warn("The cacheops cache timed out! Error: %s" % e, RuntimeWarning)
+
+handle_connection_failure = _handle_connection_failure if settings.CACHEOPS_DEGRADE_ON_FAILURE \
+    else identity
 
 
 @LazyObject

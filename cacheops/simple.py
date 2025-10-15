@@ -92,9 +92,10 @@ class BaseCache(object):
 class RedisCache(BaseCache):
     def __init__(self, conn):
         self.conn = conn
+        self._conn_get = handle_connection_failure(conn.get)
 
     def _get(self, cache_key):
-        data = self.conn.get(cache_key)
+        data = self._conn_get(cache_key)
         if data is None:
             raise CacheMiss
         return settings.CACHEOPS_SERIALIZER.loads(data)
