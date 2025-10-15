@@ -71,5 +71,6 @@ def load_script(name):
 
 @memoize
 def is_redis_7():
+    # Some arcane redis version may return X.X, which redis-py turns into float
     redis_version = str(redis_client.info('server')['redis_version'])
     return int(redis_version.split('.')[0]) >= 7
